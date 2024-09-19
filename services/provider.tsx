@@ -42,7 +42,7 @@ const bitfinity: Chain = {
 }
 
 const { chains, publicClient } = configureChains(
-  [mainnet, hardhat],
+  [mainnet, bitfinity, hardhat],
   [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string }), publicProvider()]
 )
 

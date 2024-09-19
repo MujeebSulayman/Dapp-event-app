@@ -6,19 +6,31 @@ import Identicon from 'react-identicons'
 import { GetServerSidePropsContext, NextPage } from 'next'
 import { BsDot } from 'react-icons/bs'
 import { FaEthereum } from 'react-icons/fa'
-import { EventStruct, TicketStruct } from '@/utils/type.dt'
+import { EventStruct, RootState, TicketStruct } from '@/utils/type.dt'
 import { calculateDateDifference, formatDate, getExpiryDate, truncate } from '@/utils/helper'
 import { useAccount } from 'wagmi'
 import EventActions from '@/components/EventAction'
 import { generateEventData, generateTicketData } from '@/utils/fakeData'
+import { useDispatch, useSelector } from 'react-redux'
+import { globalActions } from '@/store/globalSlices'
+import { useEffect } from 'react'
 
 interface ComponentProps {
   eventData: EventStruct
   ticketsData: TicketStruct[]
 }
 
-const Page: NextPage<ComponentProps> = ({ eventData: event, ticketsData: tickets }) => {
+const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
   const { address } = useAccount()
+
+  const dispatch = useDispatch()
+  const { setEvent, setTickets } = globalActions
+  const { event, tickets } = useSelector((states: RootState) => states.globalStates)
+
+  useEffect(() => {
+    dispatch(setEvent(eventData))
+    dispatch(setTickets(ticketsData))
+  }, [dispatch, setEvent, eventData, setTickets, ticketsData])
 
   return event ? (
     <div>
