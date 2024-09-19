@@ -57,4 +57,3 @@ contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
 
     }
 }
- 
