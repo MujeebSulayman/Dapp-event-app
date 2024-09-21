@@ -80,5 +80,14 @@ contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
     eventX.startsAt = startsAt;
     eventX.endsAt = endsAt;
     eventX.owner = msg.sender;
+    eventX.timeStamp = currentTime();
+
+  
+    eventExists[eventX.id] = true;
+    events[eventX.id] = eventX;
+  }
+
+  function currentTime() internal view returns (uint256) {
+    return (block.timestamp * 1000) + 1000;
   }
 }
