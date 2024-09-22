@@ -6,6 +6,21 @@ import '@openzeppelin/contracts/utils/Counters.sol';
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 
+/**
+ * @title DappEvent
+ * @dev A decentralized event management system with ticket sales functionality.
+ * This contract allows users to create, update, and delete events, as well as
+ * manage ticket sales. It incorporates NFT functionality for potential ticket
+ * tokenization, though this feature is not fully implemented in the current version.
+ *
+ * Key features:
+ * - Event creation and management
+ * - Ticket tracking
+ * - Basic access control for event owners
+ * - Integration with OpenZeppelin's Ownable, ReentrancyGuard, and ERC721 contracts
+ *
+ * TODO: Implement ticket buying, NFT minting, payout, and refund mechanisms.
+ */
 contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
   using Counters for Counters.Counter;
   Counters.Counter private _totalEvents;
@@ -70,6 +85,7 @@ contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
     require(endsAt > 0 ether, 'End date must be greater than zero');
 
     _totalEvents.increment();
+
     EventStruct memory eventX;
 
     eventX.id = _totalEvents.current();
@@ -131,19 +147,62 @@ contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
     events[eventId].deleted = true;
   }
 
- 
-
   //GET ALL EVENTS
   function getEvents() public view returns (EventStruct[] memory Events) {
     uint256 available;
-    for (uint256 i = 1; i <=_totalEvents.current();  i++) {
+    for (uint256 i = 1; i <= _totalEvents.current(); i++) {
       if (!events[i].deleted) available++;
+    }
+
+    Events = new EventStruct[](available);
+
+    uint256 index;
+    for (uint256 i = 1; i <= _totalEvents.current(); i++) {
+      if (!events[i].deleted) {
+        Events[index++] = events[i];
+      }
     }
   }
 
+  //GET MY EVENTS
+  function getMyEvents() public view returns (EventStruct[] memory Events) {
+    uint256 available;
+    for (uint256 i = 1; i <= _totalEvents.current(); i++) {
+      if (!events[i].deleted && events[i].owner == msg.sender) available++;
+    }
 
+    Events = new EventStruct[](available);
 
-   function currentTime() internal view returns (uint256) {
+    uint256 index;
+    for (uint256 i = 1; i <= _totalEvents.current(); i++) {
+      if (!events[i].deleted && events[i].owner == msg.sender) {
+        Events[index++] = events[i];
+      }
+    }
+  }
+
+  //GET SINGLE EVENT
+  function getSingleEvent(uint256 eventId) public view returns (EventStruct memory) {
+    require(eventExists[eventId], 'Event does not exist');
+    require(!events[eventId].deleted, 'Event already deleted');
+
+    return events[eventId];
+  }
+
+  //BUT TICKET FUNTION
+ function buyTickets(uint256 eventId, uint256 numOfticket) internal payable {
+  require(eventExists[eventId], 'Event does not exist');
+  require(events[eventId].startsAt > currentTime(), 'Event already started');
+  require(events[eventId].capacity >= events[eventId].seats + numOfticket, 'Not enough tickets available');
+  require(msg.value >= events[eventId].ticketCost * numOfticket, 'Not enough ether sent');
+  require(numOfticket > 0 && numOfticket <= 5, 'Can only buy 1-5 tickets');
+
+  //Create ticket
+  TicketStruct memory ticket;
+  
+ }
+
+  function currentTime() internal view returns (uint256) {
     return (block.timestamp * 1000) + 1000;
   }
 }
