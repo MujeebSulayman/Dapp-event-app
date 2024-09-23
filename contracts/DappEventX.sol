@@ -6,25 +6,10 @@ import '@openzeppelin/contracts/utils/Counters.sol';
 import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 
-/**
- * @title DappEvent
- * @dev A decentralized event management system with ticket sales functionality.
- * This contract allows users to create, update, and delete events, as well as
- * manage ticket sales. It incorporates NFT functionality for potential ticket
- * tokenization, though this feature is not fully implemented in the current version.
- *
- * Key features:
- * - Event creation and management
- * - Ticket tracking
- * - Basic access control for event owners
- * - Integration with OpenZeppelin's Ownable, ReentrancyGuard, and ERC721 contracts
- *
- * TODO: Implement ticket buying, NFT minting, payout, and refund mechanisms.
- */
-contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
+contract DappEventX is Ownable, ReentrancyGuard, ERC721 {
   using Counters for Counters.Counter;
   Counters.Counter private _totalEvents;
-  Counters.Counter private _totalToken;
+  Counters.Counter private _totalTokens;
 
   struct EventStruct {
     uint256 id;
@@ -38,7 +23,7 @@ contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
     uint256 seats;
     uint256 startsAt;
     uint256 endsAt;
-    uint256 timeStamp;
+    uint256 timestamp;
     bool deleted;
     bool paidOut;
     bool refunded;
@@ -50,7 +35,7 @@ contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
     uint256 eventId;
     address owner;
     uint256 ticketCost;
-    uint256 timeStamp;
+    uint256 timestamp;
     bool refunded;
     bool minted;
   }
@@ -97,7 +82,7 @@ contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
     eventX.startsAt = startsAt;
     eventX.endsAt = endsAt;
     eventX.owner = msg.sender;
-    eventX.timeStamp = currentTime();
+    eventX.timestamp = currentTime();
 
     eventExists[eventX.id] = true;
     events[eventX.id] = eventX;
@@ -137,13 +122,14 @@ contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
   }
 
   //DELETE EVENTS
-  function deleteEvent(uint256 eventId) public {
+  function deleteEvent(uint256 eventId) public nonReentrant {
     require(eventExists[eventId], 'Event does not exist');
     require(events[eventId].owner == msg.sender || msg.sender == owner(), 'Unauthorized access');
     require(!events[eventId].paidOut, 'Event already paid out');
     require(!events[eventId].refunded, 'Event already refunded');
-
     //Perform refund transaction
+    require(refundTickets(eventId), 'Event failed to refund');
+
     events[eventId].deleted = true;
   }
 
@@ -189,18 +175,86 @@ contract DappEvent is Ownable, ReentrancyGuard, ERC721 {
     return events[eventId];
   }
 
-  //BUT TICKET FUNTION
- function buyTickets(uint256 eventId, uint256 numOfticket) internal payable {
-  require(eventExists[eventId], 'Event does not exist');
-  require(events[eventId].startsAt > currentTime(), 'Event already started');
-  require(events[eventId].capacity >= events[eventId].seats + numOfticket, 'Not enough tickets available');
-  require(msg.value >= events[eventId].ticketCost * numOfticket, 'Not enough ether sent');
-  require(numOfticket > 0 && numOfticket <= 5, 'Can only buy 1-5 tickets');
+  //BUY TICKET FUNCTION
+  function buyTickets(uint256 eventId, uint256 numOfticket) public payable {
+    require(eventExists[eventId], 'Event does not exist');
+    require(events[eventId].startsAt > currentTime(), 'Event already started');
+    require(
+      events[eventId].capacity >= events[eventId].seats + numOfticket,
+      'Not enough tickets available'
+    );
+    require(msg.value >= events[eventId].ticketCost * numOfticket, 'Not enough ether sent');
+    require(numOfticket > 0 && numOfticket <= 5, 'Can only buy 1-5 tickets');
 
-  //Create ticket
-  TicketStruct memory ticket;
-  
- }
+    //Create ticket
+    for (uint i = 0; i < numOfticket; i++) {
+      TicketStruct memory ticket;
+
+      ticket.id = tickets[eventId].length;
+      ticket.eventId = eventId;
+      ticket.owner = msg.sender;
+      ticket.timestamp = currentTime();
+      ticket.ticketCost = events[eventId].ticketCost;
+      tickets[eventId].push(ticket);
+    }
+
+    events[eventId].seats += numOfticket;
+    balance = msg.value;
+  }
+
+  //GET TICKET FOR SPECIFITC EVENT
+  function getTickets(uint256 eventId) public view returns (TicketStruct[] memory) {
+    return tickets[eventId];
+  }
+
+  //REFUND TICKET FUNCTION
+  function refundTickets(uint256 eventId) internal returns (bool) {
+    for (uint i = 0; i < tickets[eventId].length; i++) {
+      tickets[eventId][i].refunded = true;
+      balance -= tickets[eventId][i].ticketCost;
+      payTo(tickets[eventId][i].owner, tickets[eventId][i].ticketCost);
+    }
+    events[eventId].refunded = true;
+    return true;
+  }
+
+  //PAYOUT TO THE EVENT PLANNER
+  function payout(uint256 eventId) public {
+    require(eventExists[eventId], 'Event does not exist');
+    require(events[eventId].paidOut, 'Event has already been paid out');
+    require(currentTime() > events[eventId].endsAt, 'Event is still on going');
+    require(
+      events[eventId].owner == msg.sender || msg.sender == owner(),
+      'Only authorities can send payout'
+    );
+    require(mintTickets(eventId), 'Event failed to mint');
+
+    uint256 revenue = events[eventId].ticketCost * events[eventId].seats;
+    uint256 fee = (revenue * servicePct) / 100;
+
+    payTo(events[eventId].owner, revenue - fee);
+    payTo(owner(), fee);
+    balance -= revenue;
+    events[eventId].paidOut = true;
+  }
+
+  //MINTING FUNCTION
+  function mintTickets(uint256 eventId) internal returns (bool) {
+    for (uint i = 0; i < tickets[eventId].length; i++) {
+      _totalTokens.increment();
+      tickets[eventId][i].minted = true;
+      _mint(tickets[eventId][i].owner, _totalTokens.current());
+    }
+
+    events[eventId].minted = true;
+    return true;
+  }
+
+  //PAYABLE FUNCTION FOR REFUND TICKET TO MAKE TRANSFER EASIER
+  function payTo(address to, uint256 amount) internal {
+    (bool success, ) = payable(to).call{ value: amount }('');
+    require(success);
+  }
 
   function currentTime() internal view returns (uint256) {
     return (block.timestamp * 1000) + 1000;
