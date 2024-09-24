@@ -1,9 +1,9 @@
 {
-  "name": "chartity-dapp",
+  "name": "charity-dapp",
   "description": "A Next.js starter that includes all you need to build amazing projects",
   "version": "1.0.0",
   "private": true,
-  "author": "darlington gospel<darlingtongospel@gmail.com>",
+  "author": "Mujeeb Sulayman<sulaymanmujeeb6@gmail.com>",
   "license": "MIT",
   "keywords": [
     "nextjs",

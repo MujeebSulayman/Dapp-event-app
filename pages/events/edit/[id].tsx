@@ -1,3 +1,4 @@
+import { getEvent } from '@/services/blockchain'
 import { generateEventData } from '@/utils/fakeData'
 import { timestampToDatetimeLocal } from '@/utils/helper'
 import { EventParams, EventStruct } from '@/utils/type.dt'
@@ -216,7 +217,7 @@ export default Page
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const { id } = context.query
-  const eventData: EventStruct = generateEventData(Number(id))[0]
+  const eventData: EventStruct = await getEvent(Number(id))
 
   return {
     props: {

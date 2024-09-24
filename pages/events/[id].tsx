@@ -14,6 +14,7 @@ import { generateEventData, generateTicketData } from '@/utils/fakeData'
 import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
 import { useEffect } from 'react'
+import { getEvent } from '@/services/blockchain'
 
 interface ComponentProps {
   eventData: EventStruct
@@ -165,7 +166,7 @@ export default Page
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const { id } = context.query
-  const eventData: EventStruct = generateEventData(Number(id))[0]
+  const eventData: EventStruct = await getEvent(Number(id))
   const ticketsData: TicketStruct[] = generateTicketData(5)
 
   return {

@@ -3,7 +3,7 @@ import React from 'react'
 
 const Hero: React.FC = () => {
   return (
-    <main className="lg:w-2/3 w-full mx-auto relative shadow-md px-5 py-7 bg-white">
+    <main className="lg:w-[90%] w-full mx-auto relative px-5 py-16">
       <div className="relative pb-8 ">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="sm:text-center lg:text-left">

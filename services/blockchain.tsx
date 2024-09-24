@@ -13,13 +13,13 @@ if (typeof window !== 'undefined') ethereum = window.ethereum
 
 const getEthereumContracts = async () => {
   const accounts = await ethereum?.request?.({ method: 'eth_accounts' })
-  if (accounts.length > 0) {
+  if (accounts?.length > 0) {
     const provider = new ethers.BrowserProvider(ethereum)
     const signer = await provider.getSigner()
     const contract = new ethers.Contract(address, abi, signer)
     return contract
   } else {
-    const provider = new ethereum.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL)
+    const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL)
     const wallet = ethers.Wallet.createRandom()
     const signer = wallet.connect(provider)
     const contract = new ethers.Contract(address, abi, signer)
@@ -30,7 +30,7 @@ const getEthereumContracts = async () => {
 const createEvent = async (event: EventParams): Promise<void> => {
   if (!ethereum) {
     reportError('Please install wallet provider')
-    return Promise.reject('Please install wallet provider')
+    return Promise.reject(new Error('Please install wallet provider'))
   }
   try {
     const contract = await getEthereumContracts()
@@ -54,11 +54,43 @@ const createEvent = async (event: EventParams): Promise<void> => {
 const getEvents = async (): Promise<EventStruct[]> => {
   const contract = await getEthereumContracts()
   const events = await contract.getEvents()
-  return events
+  return structuredEvent(events)
+}
+
+const getEvent = async (eventId: number): Promise<EventStruct> => {
+  const contract = await getEthereumContracts()
+  const event = await contract.getSingleEvent(eventId)
+  return structuredEvent([event])[0]
+}
+
+const getMyEvents = async (): Promise<EventStruct[]> => {
+  const contract = await getEthereumContracts()
+  const events = await contract.getMyEvents()
+  return structuredEvent(events)
 }
 
 
 
+const structuredEvent = (events: EventStruct[]): EventStruct[] =>
+  events
+    .map((event) => ({
+      id: Number(event.id),
+      title: event.title,
+      imageUrl: event.imageUrl,
+      description: event.description,
+      owner: event.owner,
+      sales: Number(event.sales),
+      ticketCost: parseFloat(fromWei(event.ticketCost)),
+      capacity: Number(event.capacity),
+      seats: Number(event.seats),
+      startsAt: Number(event.startsAt),
+      endsAt: Number(event.endsAt),
+      timestamp: Number(event.timestamp),
+      deleted: event.deleted,
+      paidOut: event.paidOut,
+      refunded: event.refunded,
+      minted: event.minted,
+    }))
+    .sort((a, b) => b.timestamp - a.timestamp)
 
-
-export { createEvent }
+export { createEvent, getEvents, getEvent, getMyEvents }
