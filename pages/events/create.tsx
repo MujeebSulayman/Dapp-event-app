@@ -1,11 +1,14 @@
+import { createEvent } from '@/services/blockchain'
 import { EventParams } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useAccount } from 'wagmi'
 
 const Page: NextPage = () => {
+
   const { address } = useAccount()
   const [event, setEvent] = useState<EventParams>({
     title: '',
@@ -35,7 +38,14 @@ const Page: NextPage = () => {
     await toast.promise(
       new Promise(async (resolve, reject) => {
         console.log(event)
-        resolve(event)
+        createEvent(event)
+          .then((tx) => {
+            console.log(tx)
+            resetForm()
+            resolve(tx)
+          })
+
+          .catch((error) => reject(error))
       }),
       {
         pending: 'Approve transaction...',
