@@ -49,8 +49,8 @@ const Page: NextPage = () => {
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Event creation successful 👌',
-        error: 'Encountered error 🤯',
+        success: 'Event creation successful',
+        error: 'Encountered an error',
       }
     )
   }
