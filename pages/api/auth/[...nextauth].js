@@ -2,7 +2,7 @@ import { SiweMessage } from 'siwe'
 import { getCsrfToken } from 'next-auth/react'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import NextAuth from 'next-auth/next'
-
+import { ethers } from 'ethers'
 
 export default async function auth(req, res) {
   try {
@@ -26,10 +26,14 @@ export default async function auth(req, res) {
             const siwe = new SiweMessage(JSON.parse(credentials?.message || '{}'))
             const nextAuthUrl = new URL(process.env.NEXTAUTH_URL)
 
+            // Create a provider using a public Ethereum node
+            const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL)
+
             const result = await siwe.verify({
               signature: credentials?.signature || '',
               domain: nextAuthUrl.host,
               nonce: await getCsrfToken({ req }),
+              provider: provider // Pass the provider to the verify method
             })
 
             if (result.success) {
