@@ -2,13 +2,11 @@ import { createEvent } from '@/services/blockchain'
 import { EventParams } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import { toast } from 'react-toastify'
 import { useAccount } from 'wagmi'
 
 const Page: NextPage = () => {
-
   const { address } = useAccount()
   const [event, setEvent] = useState<EventParams>({
     title: '',
@@ -67,155 +65,150 @@ const Page: NextPage = () => {
     })
   }
 
+  const inputClasses = "mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md shadow-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out"
+
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-300">
       <Head>
-        <title>Event X | Create</title>
+        <title>Event X | Create Event</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="lg:w-2/3 w-full mx-auto bg-white p-5 shadow-md">
-        <form onSubmit={handleSubmit} className="flex flex-col text-black">
-          <div className="flex flex-row justify-between items-center mb-5">
-            <p className="font-semibold">Create Event</p>
-          </div>
-
+      <main className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-extrabold text-white mb-8">Create New Event</h1>
+        <form onSubmit={handleSubmit} className="space-y-6 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl">
           {event.imageUrl && (
-            <div className="flex flex-row justify-center items-center rounded-xl">
-              <div className="shrink-0 rounded-xl overflow-hidden h-20 w-20 shadow-md">
-                <img src={event.imageUrl} alt={event.title} className="h-full object-cover" />
-              </div>
+            <div className="flex justify-center mb-6">
+              <img src={event.imageUrl} alt={event.title} className="h-48 w-full object-cover rounded-lg shadow-md" />
             </div>
           )}
 
-          <div className="flex flex-row justify-between items-center bg-gray-200 rounded-xl mt-5 p-2">
-            <input
-              className="block w-full text-sm bg-transparent border-0 focus:outline-none focus:ring-0"
-              type="text"
-              name="title"
-              placeholder="Title"
-              value={event.title}
-              onChange={handleChange}
-            />
-          </div>
+          <div className="space-y-6">
+            <div>
+              <label htmlFor="title" className="block text-sm font-medium text-gray-400 mb-1">
+                Event Title
+              </label>
+              <input
+                type="text"
+                name="title"
+                id="title"
+                className={inputClasses}
+                placeholder="Enter event title"
+                value={event.title}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-          <div
-            className="flex flex-col sm:flex-row justify-between items-center w-full
-           space-x-0 sm:space-x-2 space-y-5 sm:space-y-0 mt-5"
-          >
-            <div className="w-full bg-gray-200 rounded-xl p-2">
-              <div
-                className="block w-full text-sm bg-transparent
-              border-0 focus:outline-none focus:ring-0"
-              >
+            <div>
+              <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-400 mb-1">
+                Image URL
+              </label>
+              <input
+                type="url"
+                name="imageUrl"
+                id="imageUrl"
+                className={inputClasses}
+                placeholder="https://example.com/image.jpg"
+                pattern="https?://.+(\.(jpg|png|gif))?$"
+                value={event.imageUrl}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label htmlFor="capacity" className="block text-sm font-medium text-gray-400 mb-1">
+                  Capacity
+                </label>
                 <input
-                  className="block w-full text-sm bg-transparent
-                  border-0 focus:outline-none focus:ring-0"
                   type="number"
-                  step={1}
-                  min={1}
                   name="capacity"
-                  placeholder="Capacity"
+                  id="capacity"
+                  min={1}
+                  className={inputClasses}
+                  placeholder="Enter capacity"
                   value={event.capacity}
                   onChange={handleChange}
                   required
                 />
               </div>
-            </div>
 
-            <div className="w-full bg-gray-200 rounded-xl p-2">
-              <div
-                className="block w-full text-sm bg-transparent
-              border-0 focus:outline-none focus:ring-0"
-              >
+              <div>
+                <label htmlFor="ticketCost" className="block text-sm font-medium text-gray-400 mb-1">
+                  Ticket Cost (ETH)
+                </label>
                 <input
-                  className="block w-full text-sm bg-transparent
-                  border-0 focus:outline-none focus:ring-0"
                   type="number"
-                  step="0.01"
-                  min="0.01"
                   name="ticketCost"
-                  placeholder="Ticket cost (ETH)"
+                  id="ticketCost"
+                  step="0.001"
+                  min="0.001"
+                  className={inputClasses}
+                  placeholder="0.1"
                   value={event.ticketCost}
                   onChange={handleChange}
                   required
                 />
               </div>
             </div>
-          </div>
 
-          <div className="flex flex-row justify-between items-center bg-gray-200 rounded-xl mt-5 p-2">
-            <input
-              className="block w-full text-sm bg-transparent border-0 focus:outline-none focus:ring-0"
-              type="url"
-              name="imageUrl"
-              placeholder="ImageURL"
-              pattern="https?://.+(\.(jpg|png|gif))?$"
-              value={event.imageUrl}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div
-            className="flex flex-col sm:flex-row justify-between items-center w-full
-           space-x-0 sm:space-x-2 space-y-5 sm:space-y-0 mt-5"
-          >
-            <div className="w-full bg-gray-200 rounded-xl p-2">
-              <div
-                className="block w-full text-sm bg-transparent
-              border-0 focus:outline-none focus:ring-0"
-              >
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <label htmlFor="startsAt" className="block text-sm font-medium text-gray-400 mb-1">
+                  Start Date
+                </label>
                 <input
-                  placeholder="Start Date"
-                  className="bg-transparent outline-none w-full placeholder-[#3D3857] text-sm border-none focus:outline-none focus:ring-0 py-0"
-                  name="startsAt"
                   type="datetime-local"
+                  name="startsAt"
+                  id="startsAt"
+                  className={inputClasses}
                   value={event.startsAt}
                   onChange={handleChange}
                   required
                 />
               </div>
-            </div>
 
-            <div className="w-full bg-gray-200 rounded-xl p-2">
-              <div
-                className="block w-full text-sm bg-transparent
-              border-0 focus:outline-none focus:ring-0"
-              >
+              <div>
+                <label htmlFor="endsAt" className="block text-sm font-medium text-gray-400 mb-1">
+                  End Date
+                </label>
                 <input
-                  placeholder="End Date"
-                  className="bg-transparent outline-none w-full placeholder-[#3D3857] text-sm border-none focus:outline-none focus:ring-0 py-0"
-                  name="endsAt"
                   type="datetime-local"
+                  name="endsAt"
+                  id="endsAt"
+                  className={inputClasses}
                   value={event.endsAt}
                   onChange={handleChange}
                   required
                 />
               </div>
             </div>
+
+            <div>
+              <label htmlFor="description" className="block text-sm font-medium text-gray-400 mb-1">
+                Description
+              </label>
+              <textarea
+                name="description"
+                id="description"
+                rows={4}
+                className={inputClasses}
+                placeholder="Describe your event"
+                value={event.description}
+                onChange={handleChange}
+                required
+              ></textarea>
+            </div>
           </div>
 
-          <div className="flex flex-row justify-between items-center bg-gray-200 rounded-xl mt-5 p-2">
-            <textarea
-              className="block w-full text-sm resize-none
-              bg-transparent border-0 focus:outline-none focus:ring-0 h-20"
-              name="description"
-              placeholder="Description"
-              value={event.description}
-              onChange={handleChange}
-              required
-            ></textarea>
-          </div>
-
-          <div className="mt-5">
+          <div className="flex justify-end mt-8">
             <button
               type="submit"
-              className="bg-orange-500 p-2 rounded-full py-3 px-10
-            text-white hover:bg-transparent border hover:text-orange-500
-            hover:border-orange-500 duration-300 transition-all"
+              className="px-6 py-3 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-150 ease-in-out"
             >
-              Submit
+              Create Event
             </button>
           </div>
         </form>

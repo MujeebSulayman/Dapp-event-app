@@ -11,26 +11,30 @@ const Page: NextPage<{ ticketsData: TicketStruct[] }> = ({ ticketsData }) => {
   const { id } = router.query
 
   return (
-    <div>
+    <div className="min-h-screen bg-black">
       <Head>
         <title>Event X | Tickets</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className="flex justify-center items-center flex-col flex-wrap p-6">
-        <Ticket tickets={ticketsData} />
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-white mb-6">Event Tickets</h1>
 
-        <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start space-x-2">
+        <section className="bg-white shadow-md rounded-lg p-6 mb-8">
+          <Ticket tickets={ticketsData} />
+        </section>
+
+        <div className="flex justify-start">
           <Link
             href={'/events/' + id}
-            className="bg-[#010125] p-2 rounded-full py-3 px-10
-            text-white border hover:bg-transparent hover:text-[#010125]
-            hover:border-[#010125] duration-300 transition-all"
+            className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-md
+            hover:bg-blue-700 transition duration-300 ease-in-out
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           >
-            Back
+            Back to Event
           </Link>
         </div>
-      </section>
+      </main>
     </div>
   )
 }

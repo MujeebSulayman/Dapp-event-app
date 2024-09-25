@@ -22,11 +22,14 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
       <Providers pageProps={pageProps}>
         <Provider store={store}>
-          <div className="min-h-screen bg-gray-100">
+          <div className="bg-black min-h-screen flex flex-col text-white">
             <Header />
-            <div className="mt-10 h-20 "></div>
-            <Component {...pageProps} />
-            <div className="mt-10 h-20 "></div>
+
+            <main className="flex-grow pt-16">
+              {' '}
+              {/* Adjust pt-24 as needed */}
+              <Component {...pageProps} />
+            </main>
 
             <ToastContainer
               position="bottom-center"
@@ -40,6 +43,9 @@ export default function App({ Component, pageProps }: AppProps) {
               pauseOnHover
               theme="dark"
             />
+            <footer className="text-center py-4 text-gray-400 text-sm">
+              © 2023 HemiVent. All rights reserved.
+            </footer>
           </div>
         </Provider>
       </Providers>

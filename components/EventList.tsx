@@ -8,7 +8,7 @@ const EventList: React.FC<{ events: EventStruct[] }> = ({ events }) => {
   return (
     <section className="mt-10">
       <main className="lg:w-[70%] w-full mx-auto">
-        <h4 className="text-2xl font-semibold my-8 text-center">Recent Events</h4>
+        <h4 className="text-2xl font-semibold my-8 text-gray-300 text-center">Recent Events</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto w-full justify-items-center">
           {events.map((event, i) => (
             <Card key={i} event={event} />
@@ -25,7 +25,7 @@ const Card: React.FC<{ event: EventStruct }> = ({ event }) => {
       <div className="relative">
         <img src={event.imageUrl} alt={event.title} className="h-44 w-full object-cover" />
         {!event.minted ? (
-          <span className="bg-orange-600 text-white absolute right-3 top-3 rounded-xl px-4">
+          <span className="bg-green-500 text-white absolute right-3 top-3 rounded-xl px-4">
             Open
           </span>
         ) : (
@@ -44,7 +44,7 @@ const Card: React.FC<{ event: EventStruct }> = ({ event }) => {
             maxLength: 48,
           })}
         </h3>
-        <p>
+        <p className="text-gray-500 text-md">
           {truncate({
             text: event.description,
             startChars: 100,
@@ -54,7 +54,7 @@ const Card: React.FC<{ event: EventStruct }> = ({ event }) => {
         </p>
         <div className="flex justify-between items-center mt-3">
           <div className="flex justify-start items-center">
-            <FaEthereum />
+            <FaEthereum className="text-green-500" />
             <p className="uppercase text-green-800 font-medium ">
               {event.ticketCost.toFixed(2)} ETH
             </p>

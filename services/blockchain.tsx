@@ -69,8 +69,6 @@ const getMyEvents = async (): Promise<EventStruct[]> => {
   return structuredEvent(events)
 }
 
-
-
 const structuredEvent = (events: EventStruct[]): EventStruct[] =>
   events
     .map((event) => ({

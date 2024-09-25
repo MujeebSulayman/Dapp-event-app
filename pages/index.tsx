@@ -17,9 +17,9 @@ const Page: NextPage<{ eventsData: EventStruct[] }> = ({ eventsData }) => {
   }, [eventsData, end])
 
   return (
-    <div>
+    <div className="bg-black min-h-screen flex flex-col">
       <Head>
-        <title>Event X</title>
+        <title>HemiVent</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
