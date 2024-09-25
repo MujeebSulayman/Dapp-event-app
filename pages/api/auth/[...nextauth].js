@@ -2,7 +2,7 @@ import { SiweMessage } from 'siwe'
 import { getCsrfToken } from 'next-auth/react'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import NextAuth from 'next-auth/next'
-import { getDefaultProvider } from 'ethers'
+import { ethers } from 'ethers'
 
 export default async function auth(req, res) {
   const providers = [
@@ -25,14 +25,16 @@ export default async function auth(req, res) {
           const siwe = new SiweMessage(JSON.parse(credentials?.message || '{}'))
           const nextAuthUrl = new URL(process.env.NEXTAUTH_URL)
 
-          // Use getDefaultProvider instead of JsonRpcProvider
-          const provider = getDefaultProvider()
+          // Create a provider instance for Infura Sepolia
+          const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL)
+
+          // Get the nonce from the Ethereum network (if needed)
+          const nonce = await getCsrfToken({ req })
 
           const result = await siwe.verify({
             signature: credentials?.signature || '',
             domain: nextAuthUrl.host,
-            nonce: await getCsrfToken({ req }),
-            provider: provider,
+            nonce,
           })
 
           if (result.success) {
@@ -43,7 +45,7 @@ export default async function auth(req, res) {
 
           return null
         } catch (error) {
-          console.error('SIWE error', error)
+          console.error('Authorization error:', error)
           return null
         }
       },
