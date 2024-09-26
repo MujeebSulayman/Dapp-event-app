@@ -116,14 +116,16 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode; mobile?: bool
   children,
   mobile,
 }) => (
-  <Link href={href} passHref>
-    <motion.a
-      className={`text-base font-medium text-gray-300 hover:text-white ${mobile ? 'block' : ''}`}
+  <Link href={href} passHref legacyBehavior>
+    <motion.span
+      className={`text-base font-medium text-gray-300 hover:text-white cursor-pointer ${
+        mobile ? 'block' : ''
+      }`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
       {children}
-    </motion.a>
+    </motion.span>
   </Link>
 )
 

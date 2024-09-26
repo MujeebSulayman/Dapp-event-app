@@ -1,7 +1,10 @@
 import { ethers } from 'ethers'
-import { dappEventXContract as address } from '@/contracts/contractAddress.json'
-import { abi } from '@/artifacts/contracts/DappEventX.sol/DappEventX.json'
-import { EventParams, EventStruct } from '@/utils/type.dt'
+import contractAddress from '@/contracts/contractAddress.json'
+import DappEventXArtifact from '@/artifacts/contracts/DappEventX.sol/DappEventX.json'
+import { EventParams, EventStruct, TicketStruct } from '@/utils/type.dt'
+
+const address = contractAddress.dappEventXContract
+const abi = DappEventXArtifact.abi
 
 const toWei = (num: number) => ethers.parseEther(num.toString())
 const fromWei = (num: number) => ethers.formatEther(num)
@@ -51,6 +54,31 @@ const createEvent = async (event: EventParams): Promise<void> => {
   }
 }
 
+const updateEvent = async (event: EventParams): Promise<void> => {
+  if (!ethereum) {
+    reportError('Please install wallet provider')
+    return Promise.reject(new Error('Please install wallet provider'))
+  }
+  try {
+    const contract = await getEthereumContracts()
+    tx = await contract.updateEvent(
+      event.id,
+      event.title,
+      event.description,
+      event.imageUrl,
+      event.capacity,
+      toWei(Number(event.ticketCost)),
+      event.startsAt,
+      event.endsAt
+    )
+    await tx.wait()
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
 const getEvents = async (): Promise<EventStruct[]> => {
   const contract = await getEthereumContracts()
   const events = await contract.getEvents()
@@ -68,6 +96,25 @@ const getMyEvents = async (): Promise<EventStruct[]> => {
   const events = await contract.getMyEvents()
   return structuredEvent(events)
 }
+
+const getTickets = async (eventId: number): Promise<TicketStruct[]> => {
+  const contract = await getEthereumContracts()
+  const tickets = await contract.getTickets(eventId)
+  return structuredTicket(tickets)
+}
+
+const structuredTicket = (tickets: TicketStruct[]): TicketStruct[] =>
+  tickets
+    .map((ticket) => ({
+      id: Number(ticket.id),
+      eventId: Number(ticket.eventId),
+      owner: ticket.owner,
+      ticketCost: parseFloat(fromWei(ticket.ticketCost)),
+      timestamp: Number(ticket.timestamp),
+      refunded: ticket.refunded,
+      minted: ticket.minted,
+    }))
+    .sort((a, b) => b.timestamp - a.timestamp)
 
 const structuredEvent = (events: EventStruct[]): EventStruct[] =>
   events
@@ -91,4 +138,4 @@ const structuredEvent = (events: EventStruct[]): EventStruct[] =>
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 
-export { createEvent, getEvents, getEvent, getMyEvents }
+export { createEvent, updateEvent, getEvents, getEvent, getMyEvents, getTickets }

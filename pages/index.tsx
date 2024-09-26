@@ -31,8 +31,7 @@ const Page: NextPage<{ eventsData: EventStruct[] }> = ({ eventsData }) => {
       {collection.length > 0 && eventsData.length > collection.length && (
         <div className="w-full flex justify-center items-center">
           <button
-            className="bg-orange-500 shadow-md rounded-full py-3 px-4
-        text-white duration-300 transition-all"
+            className="px-6 py-3 rounded-lg text-sm font-medium text-white  bg-indigo-600 hover:bg-indigo-700  duration-300 transition-all"
             onClick={() => setEnd(end + count)}
           >
             {' '}

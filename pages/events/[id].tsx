@@ -13,7 +13,7 @@ import EventActions from '@/components/EventAction'
 import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
 import { useEffect } from 'react'
-import { getEvent } from '@/services/blockchain'
+import { getEvent, getTickets } from '@/services/blockchain'
 import { generateTicketData } from '@/utils/fakeData'
 
 interface ComponentProps {
@@ -163,7 +163,7 @@ export default Page
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const { id } = context.query
   const eventData: EventStruct = await getEvent(Number(id))
-  const ticketsData: TicketStruct[] = generateTicketData(5)
+  const ticketsData: TicketStruct[] = await getTickets(Number(id))
 
   return {
     props: {
