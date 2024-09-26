@@ -27,7 +27,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
             <main className="flex-grow pt-16">
               {' '}
-              {/* Adjust pt-24 as needed */}
               <Component {...pageProps} />
             </main>
 
@@ -44,7 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
               theme="dark"
             />
             <footer className="text-center py-4 text-gray-400 text-sm">
-              © 2023 HemiVent. All rights reserved.
+              © 2024 HemiVent. All rights reserved.
             </footer>
           </div>
         </Provider>

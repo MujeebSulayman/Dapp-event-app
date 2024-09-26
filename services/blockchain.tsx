@@ -19,11 +19,7 @@ const getEthereumContracts = async () => {
     const contract = new ethers.Contract(address, abi, signer)
     return contract
   } else {
-    // Use a fallback RPC URL if the local network is not available
-    const fallbackRpcUrl =
-      'https://sepolia.infura.io/v3/43b63ab830c94d8a98ca966e9d167c57' ||
-      process.env.NEXT_PUBLIC_RPC_URL
-    const provider = new ethers.JsonRpcProvider(fallbackRpcUrl)
+    const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL)
     const wallet = ethers.Wallet.createRandom()
     const signer = wallet.connect(provider)
     const contract = new ethers.Contract(address, abi, signer)

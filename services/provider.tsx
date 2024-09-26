@@ -91,11 +91,11 @@ export function Providers({
   return (
     <WagmiConfig config={wagmiConfig}>
       <SessionProvider refetchInterval={0} session={pageProps.session}>
-        <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
+        {/* <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}> */}
           <RainbowKitProvider theme={darkTheme()} chains={chains} appInfo={demoAppInfo}>
             {mounted && children}
           </RainbowKitProvider>
-        </RainbowKitSiweNextAuthProvider>
+        {/* </RainbowKitSiweNextAuthProvider> */}
       </SessionProvider>
     </WagmiConfig>
   )

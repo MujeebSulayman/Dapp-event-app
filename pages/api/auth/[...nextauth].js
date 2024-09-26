@@ -38,7 +38,6 @@ export default async function auth(req, res) {
 
           return null
         } catch (error) {
-          console.error('SIWE error', error)
           return null
         }
       },
