@@ -83,13 +83,7 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
                 <p className="text-white text-sm">{event.capacity - event.seats} left</p>
               </div>
               
-              <div className="bg-gray-800 rounded-lg p-4 shadow-md">
-                <div className="flex items-center text-indigo-400 mb-2">
-                  <BsGeoAlt className="text-xl mr-2" />
-                  <h3 className="text-lg font-semibold">Location</h3>
-                </div>
-                <p className="text-white text-sm">Event Location</p>
-              </div>
+             
             </div>
 
             <p className="text-gray-300 mb-6">{event.description}</p>
