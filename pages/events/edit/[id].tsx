@@ -10,8 +10,8 @@ import { toast } from 'react-toastify'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 
-const router = useRouter()
 const Page: NextPage<{ eventData: EventStruct }> = ({ eventData }) => {
+  const router = useRouter()
   const { address } = useAccount()
   const [event, setEvent] = useState<EventParams>({
     ...eventData,
