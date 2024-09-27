@@ -30,6 +30,7 @@ const getEthereumContracts = async () => {
   }
 }
 
+//Create an Event
 const createEvent = async (event: EventParams): Promise<void> => {
   if (!ethereum) {
     reportError('Please install wallet provider')
@@ -54,6 +55,7 @@ const createEvent = async (event: EventParams): Promise<void> => {
   }
 }
 
+//Update an Event
 const updateEvent = async (event: EventParams): Promise<void> => {
   if (!ethereum) {
     reportError('Please install wallet provider')
@@ -79,24 +81,61 @@ const updateEvent = async (event: EventParams): Promise<void> => {
   }
 }
 
+//DELETE EVENT
+const deleteEvent = async (eventId: number): Promise<void> => {
+  if (!ethereum) {
+    reportError('Please install wallet provider')
+    return Promise.reject(new Error('Please install wallet provider'))
+  }
+  try {
+    const contract = await getEthereumContracts()
+    tx = await contract.deleteEvent(eventId)
+    await tx.wait()
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+//BUY TICKET
+const buyTickets = async (event: EventStruct, tickets: number): Promise<void> => {
+  if (!ethereum) {
+    reportError('Please install wallet provider')
+    return Promise.reject(new Error('Please install wallet provider'))
+  }
+  try {
+    const contract = await getEthereumContracts()
+    tx = await contract.buyTicket(event.id, tickets, { value: toWei(event.ticketCost * tickets) })
+    await tx.wait()
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
+//Get All Events
 const getEvents = async (): Promise<EventStruct[]> => {
   const contract = await getEthereumContracts()
   const events = await contract.getEvents()
   return structuredEvent(events)
 }
 
+//Get a single Event
 const getEvent = async (eventId: number): Promise<EventStruct> => {
   const contract = await getEthereumContracts()
   const event = await contract.getSingleEvent(eventId)
   return structuredEvent([event])[0]
 }
 
+//Get Personal event
 const getMyEvents = async (): Promise<EventStruct[]> => {
   const contract = await getEthereumContracts()
   const events = await contract.getMyEvents()
   return structuredEvent(events)
 }
 
+//Get All Tickets
 const getTickets = async (eventId: number): Promise<TicketStruct[]> => {
   const contract = await getEthereumContracts()
   const tickets = await contract.getTickets(eventId)
@@ -138,4 +177,13 @@ const structuredEvent = (events: EventStruct[]): EventStruct[] =>
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 
-export { createEvent, updateEvent, getEvents, getEvent, getMyEvents, getTickets }
+export {
+  createEvent,
+  updateEvent,
+  getEvents,
+  getEvent,
+  deleteEvent,
+  getMyEvents,
+  getTickets,
+  buyTickets,
+}
