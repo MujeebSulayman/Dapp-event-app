@@ -105,7 +105,7 @@ const buyTickets = async (event: EventStruct, tickets: number): Promise<void> =>
   }
   try {
     const contract = await getEthereumContracts()
-    tx = await contract.buyTicket(event.id, tickets, { value: toWei(event.ticketCost * tickets) })
+    tx = await contract.buyTickets(event.id, tickets, { value: toWei(event.ticketCost * tickets) })
     await tx.wait()
     return Promise.resolve(tx)
   } catch (error) {

@@ -33,19 +33,19 @@ const Hero: React.FC = () => {
         ))}
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="text-center">
           <motion.h1
-            className="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl"
+            className="text-3xl tracking-tight font-extrabold text-white sm:text-4xl md:text-5xl lg:text-6xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <span className="block xl:inline">Revolutionize Events with</span>{' '}
-            <span className="block text-blue-500 xl:inline">Blockchain Technology</span>
+            <span className="block">Revolutionize Events with</span>{' '}
+            <span className="block text-blue-500">Blockchain Technology</span>
           </motion.h1>
           <motion.p
-            className="mt-3 max-w-md mx-auto text-base text-gray-300 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl"
+            className="mt-3 max-w-md mx-auto text-sm text-gray-300 sm:text-base md:mt-5 md:text-lg lg:text-xl md:max-w-3xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -84,18 +84,17 @@ const Hero: React.FC = () => {
 
         {/* Web3 elements */}
         <motion.div
-          className="mt-12 flex justify-center space-x-6"
+          className="mt-12 flex flex-row justify-center flex-wrap gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
         >
           {['Conferences', 'Meetups', 'Workshops'].map((tech, index) => (
-            <div key={tech} className="flex items-center">
+            <div key={tech} className="flex items-center justify-center">
               <div className="flex-shrink-0">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                <div className="flex items-center justify-center h-10 w-10 rounded-md bg-blue-500 text-white">
                   {/* You can replace this with actual icons */}
-
-                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -105,8 +104,8 @@ const Hero: React.FC = () => {
                   </svg>
                 </div>
               </div>
-              <div className="ml-3">
-                <dt className="text-lg leading-6 font-medium text-white">{tech}</dt>
+              <div className="ml-2">
+                <dt className="text-sm leading-6 font-medium text-white">{tech}</dt>
               </div>
             </div>
           ))}

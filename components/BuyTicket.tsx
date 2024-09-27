@@ -1,5 +1,7 @@
+import { buyTickets } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { EventStruct, RootState } from '@/utils/type.dt'
+import { useRouter } from 'next/router'
 import React, { FormEvent, useState, useEffect, useRef } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
@@ -7,6 +9,7 @@ import { toast } from 'react-toastify'
 import { useAccount } from 'wagmi'
 
 const BuyTicket: React.FC<{ event: EventStruct }> = ({ event }) => {
+  const router = useRouter()
   const { ticketModal } = useSelector((state: RootState) => state.globalStates)
   const { address } = useAccount()
   const [tickets, setTickets] = useState<number | string>('')
@@ -33,8 +36,16 @@ const BuyTicket: React.FC<{ event: EventStruct }> = ({ event }) => {
 
     await toast.promise(
       new Promise(async (resolve, reject) => {
-        console.log(event)
-        resolve(event)
+        await buyTickets(event, Number(tickets))
+          .then((tx) => {
+            console.log(tx)
+            onClose() // Close the modal
+            resolve(tx)
+            router.push(`/events/${event.id}`)
+          })
+          .catch((error) => {
+            reject(error)
+          })
       }),
       {
         pending: 'Approve transaction...',
@@ -53,7 +64,10 @@ const BuyTicket: React.FC<{ event: EventStruct }> = ({ event }) => {
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
         bg-black bg-opacity-50 backdrop-blur-sm transform z-50 transition-transform duration-300 ${ticketModal}`}
     >
-      <div ref={modalRef} className="bg-white text-gray-800 shadow-xl rounded-2xl w-11/12 md:w-96 p-8">
+      <div
+        ref={modalRef}
+        className="bg-white text-gray-800 shadow-xl rounded-2xl w-11/12 md:w-96 p-8"
+      >
         <div className="flex flex-col">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-indigo-600">Buy Tickets</h2>
@@ -76,9 +90,10 @@ const BuyTicket: React.FC<{ event: EventStruct }> = ({ event }) => {
                   name="tickets"
                   id="tickets"
                   className="block w-full pr-10 text-lg border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 py-3 px-4" // Updated classes
-                  placeholder="1"
-                  min="1"
-                  step="1"
+                  placeholder="1-5"
+                  min={1}
+                  step={1}
+                  max={5}
                   value={tickets}
                   onChange={(e) => setTickets(e.target.value)}
                   required
