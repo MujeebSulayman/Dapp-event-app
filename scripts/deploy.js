@@ -1,59 +1,28 @@
-const { ethers } = require('hardhat')
-const fs = require('fs')
-
-async function deployContract() {
-  let contract
-  const servicePct = 5
-
-  try {
-    contract = await ethers.deployContract('DappEventX', [servicePct])
-    await contract.waitForDeployment()
-
-    console.log('Contracts deployed successfully.')
-    return contract
-  } catch (error) {
-    console.error('Error deploying contracts:', error)
-    throw error
-  }
-}
-
-async function saveContractAddress(contract) {
-  try {
-    const address = JSON.stringify(
-      {
-        dappEventXContract: contract.target,
-      },
-      null,
-      4
-    )
-
-    fs.writeFile('./contracts/contractAddress.json', address, 'utf8', (error) => {
-      if (error) {
-        console.error('Error saving contract address:', err)
-      } else {
-        console.log('Deployed contract address:', address)
-      }
-    })
-  } catch (error) {
-    console.error('Error saving contract address:', error)
-    throw error
-  }
-}
+const hre = require("hardhat");
 
 async function main() {
-  let contract
+  const servicePct = 5;
 
-  try {
-    contract = await deployContract()
-    await saveContractAddress(contract)
+  const DappEventX = await hre.ethers.getContractFactory("DappEventX");
+  const dappEventX = await DappEventX.deploy(servicePct);
 
-    console.log('Contract deployment completed successfully.')
-  } catch (error) {
-    console.error('Unhandled error:', error)
-  }
+  await dappEventX.waitForDeployment();
+
+  console.log("DappEventX deployed to:", await dappEventX.getAddress());
+
+  // Save the contract address
+  const fs = require('fs');
+  const contractAddresses = {
+    dappEventXContract: await dappEventX.getAddress(),
+  };
+
+  fs.writeFileSync(
+    './contracts/contractAddress.json',
+    JSON.stringify(contractAddresses, null, 2)
+  );
 }
 
 main().catch((error) => {
-  console.error('Unhandled error:', error)
-  process.exitCode = 1
-})
+  console.error(error);
+  process.exitCode = 1;
+});
