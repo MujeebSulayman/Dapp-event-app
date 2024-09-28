@@ -27,7 +27,7 @@ const AllEventsPage: NextPage = () => {
   return (
     <div className="bg-black min-h-screen">
       <Head>
-        <title>Event X | All Events</title>
+        <title>HemiVent | All Events</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

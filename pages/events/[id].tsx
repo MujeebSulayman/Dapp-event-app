@@ -50,7 +50,7 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
   return event ? (
     <div className="min-h-screen bg-black text-white">
       <Head>
-        <title>Event X | {event.title}</title>
+        <title>HemiVent | {event.title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

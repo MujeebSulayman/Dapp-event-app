@@ -65,21 +65,29 @@ const Page: NextPage = () => {
     })
   }
 
-  const inputClasses = "mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md shadow-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out"
+  const inputClasses =
+    'mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md shadow-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out'
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-300">
       <Head>
-        <title>Event X | Create Event</title>
+        <title>HemiVent | Create Event</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-extrabold text-white mb-8">Create New Event</h1>
-        <form onSubmit={handleSubmit} className="space-y-6 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl"
+        >
           {event.imageUrl && (
             <div className="flex justify-center mb-6">
-              <img src={event.imageUrl} alt={event.title} className="h-48 w-full object-cover rounded-lg shadow-md" />
+              <img
+                src={event.imageUrl}
+                alt={event.title}
+                className="h-48 w-full object-cover rounded-lg shadow-md"
+              />
             </div>
           )}
 
@@ -136,7 +144,10 @@ const Page: NextPage = () => {
               </div>
 
               <div>
-                <label htmlFor="ticketCost" className="block text-sm font-medium text-gray-400 mb-1">
+                <label
+                  htmlFor="ticketCost"
+                  className="block text-sm font-medium text-gray-400 mb-1"
+                >
                   Ticket Cost (ETH)
                 </label>
                 <input

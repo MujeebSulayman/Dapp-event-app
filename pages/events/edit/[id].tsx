@@ -60,7 +60,7 @@ const Page: NextPage<{ eventData: EventStruct }> = ({ eventData }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-300">
       <Head>
-        <title>Event X | Edit Event</title>
+        <title>HemiVent| Edit Event</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
