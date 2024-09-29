@@ -6,14 +6,11 @@ module.exports = {
   networks: {
     hardhat: {},
     sepolia: {
-      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      url: `https://rpc.sepolia.org`,
       accounts: [process.env.PRIVATE_KEY],
       gas: 2100000,
       gasPrice: 8000000000,
-      timeout: 60000, // 60 seconds
-      httpHeaders: {
-        'keep-alive': 'true'
-      },
+      timeout: 60000,
     },
   },
   solidity: {
