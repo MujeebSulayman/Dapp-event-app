@@ -1,28 +1,45 @@
-const hre = require("hardhat");
+require('dotenv').config();
+const { ethers } = require("hardhat");
 
 async function main() {
-  const servicePct = 5;
+  console.log("Starting deployment process...");
 
-  const DappEventX = await hre.ethers.getContractFactory("DappEventX");
-  const dappEventX = await DappEventX.deploy(servicePct);
+  try {
+    const [deployer] = await ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
 
-  await dappEventX.waitForDeployment();
+    console.log("Account balance:", (await ethers.provider.getBalance(deployer.address)).toString());
 
-  console.log("DappEventX deployed to:", await dappEventX.getAddress());
+    const DappEventX = await ethers.getContractFactory("DappEventX");
+    console.log("Deploying DappEventX...");
+    const dappEventX = await DappEventX.deploy(5); // Assuming 5 is the servicePct
 
-  // Save the contract address
-  const fs = require('fs');
-  const contractAddresses = {
-    dappEventXContract: await dappEventX.getAddress(),
-  };
+    await dappEventX.waitForDeployment();
 
-  fs.writeFileSync(
-    './contracts/contractAddress.json',
-    JSON.stringify(contractAddresses, null, 2)
-  );
+    console.log("DappEventX deployed to:", await dappEventX.getAddress());
+
+    // Save the contract address
+    const fs = require("fs");
+    const contractsDir = __dirname + "/../contracts";
+
+    if (!fs.existsSync(contractsDir)) {
+      fs.mkdirSync(contractsDir);
+    }
+
+    fs.writeFileSync(
+      contractsDir + "/contractAddress.json",
+      JSON.stringify({ DappEventX: await dappEventX.getAddress() }, undefined, 2)
+    );
+
+    console.log("Contract address saved to contractAddress.json");
+  } catch (error) {
+    console.error("Error in deployment process:", error);
+  }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

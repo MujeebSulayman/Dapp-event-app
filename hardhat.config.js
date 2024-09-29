@@ -1,13 +1,23 @@
-require('@nomicfoundation/hardhat-toolbox')
-require('dotenv').config()
+require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
 
-const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL
-const PRIVATE_KEY = process.env.PRIVATE_KEY
-
-/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
+  defaultNetwork: 'sepolia',
+  networks: {
+    hardhat: {},
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: [process.env.PRIVATE_KEY],
+      gas: 2100000,
+      gasPrice: 8000000000,
+      timeout: 60000, // 60 seconds
+      httpHeaders: {
+        'keep-alive': 'true'
+      },
+    },
+  },
   solidity: {
-    version: '0.8.19',
+    version: '0.8.20',
     settings: {
       optimizer: {
         enabled: true,
@@ -15,10 +25,7 @@ module.exports = {
       },
     },
   },
-  networks: {
-    sepolia: {
-      url: SEPOLIA_RPC_URL,
-      accounts: [PRIVATE_KEY],
-    },
+  mocha: {
+    timeout: 40000,
   },
-}
+};

@@ -13,16 +13,18 @@ import {
   coinbaseWallet,
   rainbowWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import { mainnet, hardhat } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 import { Session } from 'next-auth'
 import { SessionProvider } from 'next-auth/react'
-import { sepolia } from 'wagmi/chains'
 
 const { chains, publicClient } = configureChains(
   [sepolia],
-  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string }), publicProvider()]
+  [
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string }),
+    publicProvider()
+  ]
 )
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string
