@@ -118,7 +118,7 @@ const buyTickets = async (event: EventStruct, tickets: number): Promise<void> =>
 const getEvents = async (): Promise<EventStruct[]> => {
   const contract = await getEthereumContracts()
   const events = await contract.getEvents()
-  return events.length > 0 ? structuredEvent(events) : []
+  return structuredEvent(events)
 }
 
 //Get a single Event
