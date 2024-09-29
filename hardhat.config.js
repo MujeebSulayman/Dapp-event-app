@@ -1,8 +1,7 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config();
 
 module.exports = {
-  defaultNetwork: 'sepolia',
+  defaultNetwork: 'localhost',
   networks: {
     hardhat: {},
     localhost: {
@@ -10,7 +9,7 @@ module.exports = {
     },
   },
   solidity: {
-    version: '0.8.20',
+    version: '0.8.17',
     settings: {
       optimizer: {
         enabled: true,
@@ -21,4 +20,4 @@ module.exports = {
   mocha: {
     timeout: 40000,
   },
-};
+}
