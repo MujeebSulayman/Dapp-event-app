@@ -2,10 +2,9 @@
 
 <!-- Read the full tutorial here: **[>> How to build a Decentralized Event Marketplace with Next.js, TypeScript, Tailwind CSS, and Solidity](https://daltonic.github.io)** -->
 
-![Events Marketplace](./screenshots/0.png)
+
 The project revolves around `DappEventX.sol`, a Solidity-written Ethereum smart contract. It leverages the OpenZeppelin library to ensure secure and standardized development of the contract.
 
-![Events Marketplace](./screenshots/1.png)
 
 The core of the contract is defined by two primary structures: `EventStruct` and `TicketStruct`, representing an event and a ticket, respectively.
 

@@ -1,4 +1,4 @@
-import { buyTickets } from '@/services/blockchain'
+import { buyTicket } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { EventStruct, RootState } from '@/utils/type.dt'
 import { useRouter } from 'next/router'
@@ -36,7 +36,7 @@ const BuyTicket: React.FC<{ event: EventStruct }> = ({ event }) => {
 
     await toast.promise(
       new Promise(async (resolve, reject) => {
-        await buyTickets(event, Number(tickets))
+        await buyTicket(event, Number(tickets))
           .then((tx) => {
             console.log(tx)
             onClose() // Close the modal
