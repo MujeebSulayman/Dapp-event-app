@@ -1,4 +1,5 @@
 import Ticket from '@/components/Tickets'
+import { getTickets } from '@/services/blockchain'
 import { generateTicketData } from '@/utils/fakeData'
 import { TicketStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'
@@ -13,7 +14,7 @@ const Page: NextPage<{ ticketsData: TicketStruct[] }> = ({ ticketsData }) => {
   return (
     <div className="min-h-screen bg-black">
       <Head>
-        <title>Event X | Tickets</title>
+        <title>HemiVent | Tickets</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -43,7 +44,7 @@ export default Page
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const { id } = context.query
-  const ticketsData: TicketStruct[] = generateTicketData(7)
+  const ticketsData: TicketStruct[] = await getTickets(Number(id))
 
   return {
     props: {

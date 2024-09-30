@@ -17,8 +17,9 @@
     "export": "next build && next export",
     "lint": "next lint",
     "format": "prettier --ignore-path .gitignore \"pages/**/*.+(ts|js|tsx)\" --write",
-    "clean": "rimraf ./build"
-
+    "clean": "rimraf ./build",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "verify:sepolia": "hardhat verify --network sepolia"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -31,6 +32,7 @@
   },
   "dependencies": {
     "@headlessui/react": "1.7.17",
+    "@nomiclabs/hardhat-etherscan": "3.1.8",
     "@rainbow-me/rainbowkit": "^1.0.10",
     "@rainbow-me/rainbowkit-siwe-next-auth": "^0.3.0",
     "@reduxjs/toolkit": "1.9.6",
@@ -38,6 +40,7 @@
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
+    "dotenv": "16.4.5",
     "emojtcha-react": "1.0.6",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",

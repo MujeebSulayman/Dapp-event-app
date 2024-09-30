@@ -20,7 +20,7 @@ const Header: React.FC = () => {
   return (
     <motion.header
       className={`fixed z-50 top-0 right-0 left-0 transition-all duration-300 ${
-        scrolled ? 'bg-black bg-opacity-80 backdrop-blur-md' : 'bg-transparent'
+        scrolled ? 'bg-black bg-opacity-20 backdrop-blur-md' : 'bg-transparent'
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -51,6 +51,7 @@ const Header: React.FC = () => {
             </motion.button>
           </div>
           <nav className="hidden md:flex space-x-10">
+            <NavLink href="/events">All Events</NavLink>
             <NavLink href="/events/create">Create</NavLink>
             <NavLink href="/events/personal">Personal</NavLink>
           </nav>
@@ -91,6 +92,9 @@ const Header: React.FC = () => {
                 </div>
                 <div className="mt-6">
                   <nav className="grid gap-y-8">
+                    <NavLink href="/events" mobile>
+                      All Events
+                    </NavLink>
                     <NavLink href="/events/create" mobile>
                       Create
                     </NavLink>
@@ -116,14 +120,16 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode; mobile?: bool
   children,
   mobile,
 }) => (
-  <Link href={href} passHref>
-    <motion.a
-      className={`text-base font-medium text-gray-300 hover:text-white ${mobile ? 'block' : ''}`}
+  <Link href={href} passHref legacyBehavior>
+    <motion.span
+      className={`text-base font-medium text-gray-300 hover:text-white cursor-pointer ${
+        mobile ? 'block' : ''
+      }`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
       {children}
-    </motion.a>
+    </motion.span>
   </Link>
 )
 

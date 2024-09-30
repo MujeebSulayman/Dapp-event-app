@@ -21,7 +21,10 @@ const EventList: React.FC<{ events: EventStruct[] }> = ({ events }) => {
 
 const Card: React.FC<{ event: EventStruct }> = ({ event }) => {
   return (
-    <Link href={'/events/' + event.id} className="rounded-lg shadow-lg bg-white max-w-xs">
+    <Link
+      href={'/events/' + event.id}
+      className="rounded-lg bg-white max-w-xs overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-shadow duration-300"
+    >
       <div className="relative">
         <img src={event.imageUrl} alt={event.title} className="h-44 w-full object-cover" />
         {!event.minted ? (
