@@ -19,7 +19,7 @@ const Page: NextPage = () => {
         setEvents(fetchedEvents)
       } catch (error) {
         console.error('Failed to fetch events:', error)
-        // Handle the error appropriately
+        setEvents([])
       }
     }
 

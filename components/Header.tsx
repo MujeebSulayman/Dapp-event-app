@@ -92,7 +92,7 @@ const Header: React.FC = () => {
                 </div>
                 <div className="mt-6">
                   <nav className="grid gap-y-8">
-                    <NavLink href="/events/all" mobile>
+                    <NavLink href="/events" mobile>
                       All Events
                     </NavLink>
                     <NavLink href="/events/create" mobile>
