@@ -1,59 +1,45 @@
-const { ethers } = require('hardhat')
-const fs = require('fs')
-
-async function deployContract() {
-  let contract
-  const servicePct = 5
-
-  try {
-    contract = await ethers.deployContract('DappEventX', [servicePct])
-    await contract.waitForDeployment()
-
-    console.log('Contracts deployed successfully.')
-    return contract
-  } catch (error) {
-    console.error('Error deploying contracts:', error)
-    throw error
-  }
-}
-
-async function saveContractAddress(contract) {
-  try {
-    const address = JSON.stringify(
-      {
-        dappEventXContract: contract.target,
-      },
-      null,
-      4
-    )
-
-    fs.writeFile('./contracts/contractAddress.json', address, 'utf8', (error) => {
-      if (error) {
-        console.error('Error saving contract address:', err)
-      } else {
-        console.log('Deployed contract address:', address)
-      }
-    })
-  } catch (error) {
-    console.error('Error saving contract address:', error)
-    throw error
-  }
-}
+require('dotenv').config();
+const { ethers } = require("hardhat");
 
 async function main() {
-  let contract
+  console.log("Starting deployment process...");
 
   try {
-    contract = await deployContract()
-    await saveContractAddress(contract)
+    const [deployer] = await ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
 
-    console.log('Contract deployment completed successfully.')
+    console.log("Account balance:", (await ethers.provider.getBalance(deployer.address)).toString());
+
+    const DappEventX = await ethers.getContractFactory("DappEventX");
+    console.log("Deploying DappEventX...");
+    const dappEventX = await DappEventX.deploy(5); // Assuming 5 is the servicePct
+
+    await dappEventX.waitForDeployment();
+
+    console.log("DappEventX deployed to:", await dappEventX.getAddress());
+
+    // Save the contract address
+    const fs = require("fs");
+    const contractsDir = __dirname + "/../contracts";
+
+    if (!fs.existsSync(contractsDir)) {
+      fs.mkdirSync(contractsDir);
+    }
+
+    fs.writeFileSync(
+      contractsDir + "/contractAddress.json",
+      JSON.stringify({ DappEventX: await dappEventX.getAddress() }, undefined, 2)
+    );
+
+    console.log("Contract address saved to contractAddress.json");
   } catch (error) {
-    console.error('Unhandled error:', error)
+    console.error("Error in deployment process:", error);
   }
 }
 
-main().catch((error) => {
-  console.error('Unhandled error:', error)
-  process.exitCode = 1
-})
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

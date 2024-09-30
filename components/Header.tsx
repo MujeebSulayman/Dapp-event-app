@@ -51,6 +51,7 @@ const Header: React.FC = () => {
             </motion.button>
           </div>
           <nav className="hidden md:flex space-x-10">
+            <NavLink href="/events">All Events</NavLink>
             <NavLink href="/events/create">Create</NavLink>
             <NavLink href="/events/personal">Personal</NavLink>
           </nav>
@@ -91,6 +92,9 @@ const Header: React.FC = () => {
                 </div>
                 <div className="mt-6">
                   <nav className="grid gap-y-8">
+                    <NavLink href="/events/all" mobile>
+                      All Events
+                    </NavLink>
                     <NavLink href="/events/create" mobile>
                       Create
                     </NavLink>

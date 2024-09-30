@@ -33,6 +33,7 @@ const getEthereumContracts = async () => {
   }
 }
 
+//Create an Event
 const createEvent = async (event: EventParams): Promise<void> => {
   if (!ethereum) {
     reportError('Please install a browser provider')
@@ -59,6 +60,7 @@ const createEvent = async (event: EventParams): Promise<void> => {
   }
 }
 
+//Update an Event
 const updateEvent = async (event: EventParams): Promise<void> => {
   if (!ethereum) {
     reportError('Please install a browser provider')
@@ -167,6 +169,7 @@ const getEvent = async (eventId: number): Promise<EventStruct> => {
   return structuredEvent([event])[0]
 }
 
+//Get All Tickets
 const getTickets = async (eventId: number): Promise<TicketStruct[]> => {
   const contract = await getEthereumContracts()
   const tickets = await contract.getTickets(eventId)

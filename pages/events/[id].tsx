@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { useState } from 'react'
 import Moment from 'react-moment'
 import BuyTicket from '@/components/BuyTicket'
 import Identicon from 'react-identicons'
@@ -25,7 +26,7 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
   const { address } = useAccount()
 
   const dispatch = useDispatch()
-  const { setEvent, setTickets } = globalActions
+  const { setEvent, setTickets, setTicketModal } = globalActions
   const { event, tickets } = useSelector((states: RootState) => states.globalStates)
 
   useEffect(() => {
@@ -33,10 +34,23 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
     dispatch(setTickets(ticketsData))
   }, [dispatch, setEvent, eventData, setTickets, ticketsData])
 
+  const [countdown, setCountdown] = useState('')
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (event) {
+        const timeLeft = calculateDateDifference(event.endsAt, Date.now())
+        setCountdown(timeLeft)
+      }
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [event])
+
   return event ? (
     <div className="min-h-screen bg-black text-white">
       <Head>
-        <title>Event X | {event.title}</title>
+        <title>HemiVent | {event.title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -45,7 +59,11 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
           {/* Left side: Event details */}
           <div className="md:w-2/3">
             <div className="relative mb-6">
-              <img src={event.imageUrl} alt={event.title} className="w-full h-96 object-cover rounded-lg" />
+              <img
+                src={event.imageUrl}
+                alt={event.title}
+                className="w-full h-96 object-cover rounded-lg"
+              />
               {!event.minted ? (
                 <span className="absolute top-4 right-4 bg-orange-500 text-black text-sm font-semibold px-4 py-2 rounded-full">
                   Open
@@ -57,33 +75,39 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
               )}
             </div>
             <h1 className="text-3xl font-bold mb-4">{event.title}</h1>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              <div className="bg-gray-800 rounded-lg p-4 shadow-md">
-                <div className="flex items-center text-indigo-400 mb-2">
-                  <BsCalendar className="text-lg mr-2" />
-                  <h3 className="text-lg font-semibold">Date</h3>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+              <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg p-4 shadow-lg">
+                <div className="flex items-center text-white mb-2">
+                  <BsCalendar className="text-xl mr-2" />
+                  <h3 className="text-sm font-semibold">Date</h3>
                 </div>
                 <p className="text-white text-sm">{formatDate(event.startsAt)}</p>
               </div>
-              
-              <div className="bg-gray-800 rounded-lg p-4 shadow-md">
-                <div className="flex items-center text-indigo-400 mb-2">
+
+              <div className="bg-gradient-to-br from-pink-600 to-red-600 rounded-lg p-4 shadow-lg">
+                <div className="flex items-center text-white mb-2">
                   <BsClock className="text-xl mr-2" />
-                  <h3 className="text-lg font-semibold">Time Remaining</h3>
+                  <h3 className="text-sm font-semibold">Countdown</h3>
                 </div>
-                <p className="text-white text-sm">{calculateDateDifference(event.endsAt, Date.now())}</p>
+                <p className="text-white text-sm">{countdown}</p>
               </div>
-              
-              <div className="bg-gray-800 rounded-lg p-4 shadow-md">
-                <div className="flex items-center text-indigo-400 mb-2">
+
+              <div className="bg-gradient-to-br from-green-600 to-teal-600 rounded-lg p-4 shadow-lg">
+                <div className="flex items-center text-white mb-2">
                   <BsPeople className="text-xl mr-2" />
-                  <h3 className="text-lg font-semibold">Available Seats</h3>
+                  <h3 className="text-sm font-semibold">Available</h3>
                 </div>
                 <p className="text-white text-sm">{event.capacity - event.seats} left</p>
               </div>
-              
-             
+
+              <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg p-4 shadow-lg">
+                <div className="flex items-center text-white mb-2">
+                  <FaEthereum className="text-xl mr-2" />
+                  <h3 className="text-sm font-semibold">Price</h3>
+                </div>
+                <p className="text-white text-sm">{event.ticketCost.toFixed(2)} ETH</p>
+              </div>
             </div>
 
             <p className="text-gray-300 mb-6">{event.description}</p>
@@ -97,7 +121,10 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
 
             <div className="flex gap-4">
               {event.endsAt > Date.now() && (
-                <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors">
+                <button
+                  onClick={() => dispatch(setTicketModal('scale-100'))}
+                  className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+                >
                   Buy Ticket
                 </button>
               )}
@@ -127,7 +154,9 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
                       <FaEthereum className="mr-1" /> {ticket.ticketCost.toFixed(2)}
                     </span>
                   </div>
-                  <Moment fromNow className="text-sm text-gray-400">{ticket.timestamp}</Moment>
+                  <Moment fromNow className="text-sm text-gray-400">
+                    {ticket.timestamp}
+                  </Moment>
                 </div>
               ))}
             </div>
