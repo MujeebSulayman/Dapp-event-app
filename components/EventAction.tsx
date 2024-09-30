@@ -65,6 +65,7 @@ const EventActions: React.FC<{ event: EventStruct }> = ({ event }) => {
       new Promise(async (resolve, reject) => {
         console.log(event)
         resolve(event)
+        
       }),
       {
         pending: 'Approve transaction...',
