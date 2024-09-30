@@ -1,7 +1,6 @@
 import EventList from '@/components/EventList'
 import Hero from '@/components/Hero'
 import { getEvents } from '@/services/blockchain'
-import { generateEventData } from '@/utils/fakeData'
 import { EventStruct } from '@/utils/type.dt'
 import { NextPage } from 'next'
 import Head from 'next/head'
