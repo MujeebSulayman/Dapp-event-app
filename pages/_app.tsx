@@ -24,12 +24,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <Provider store={store}>
           <div className="bg-black min-h-screen flex flex-col text-white">
             <Header />
-
-            <main className="flex-grow pt-16">
-              {' '}
+  
               <Component {...pageProps} />
-            </main>
-
+          
             <ToastContainer
               position="bottom-center"
               autoClose={5000}

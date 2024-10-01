@@ -24,9 +24,7 @@ const getEthereumContracts = async () => {
 
     return contracts
   } else {
-    const provider = new ethers.JsonRpcProvider(
-      process.env.NEXT_PUBLIC_RPC_URL || process.env.SEPOLIA_URL
-    )
+    const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL)
     const wallet = ethers.Wallet.createRandom()
     const signer = wallet.connect(provider)
     const contracts = new ethers.Contract(address.DappEventX, abi.abi, signer)
