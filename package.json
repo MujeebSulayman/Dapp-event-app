@@ -16,10 +16,7 @@
     "start": "next start",
     "export": "next build && next export",
     "lint": "next lint",
-    "format": "prettier --ignore-path .gitignore \"pages/**/*.+(ts|js|tsx)\" --write",
-    "clean": "rimraf ./build",
-    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
-    "verify:sepolia": "hardhat verify --network sepolia"
+    "format": "prettier --ignore-path .gitignore \"pages/**/*.+(ts|js|tsx|jsx)\" --write"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

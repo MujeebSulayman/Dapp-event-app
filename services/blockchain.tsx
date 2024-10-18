@@ -25,9 +25,7 @@ const getEthereumContracts = async () => {
     return contracts
   } else {
     const provider = new ethers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL)
-    const wallet = ethers.Wallet.createRandom()
-    const signer = wallet.connect(provider)
-    const contracts = new ethers.Contract(address.DappEventX, abi.abi, signer)
+    const contracts = new ethers.Contract(address.DappEventX, abi.abi, provider)
 
     return contracts
   }
@@ -52,7 +50,6 @@ const createEvent = async (event: EventParams): Promise<void> => {
       event.endsAt
     )
     await tx.wait()
-
     return Promise.resolve(tx)
   } catch (error) {
     reportError(error)
@@ -132,7 +129,6 @@ const buyTicket = async (event: EventStruct, tickets: number): Promise<void> => 
     reportError('Please install a browser provider')
     return Promise.reject(new Error('Browser provider not installed'))
   }
-
   try {
     const contract = await getEthereumContracts()
     tx = await contract.buyTickets(event.id, tickets, { value: toWei(tickets * event.ticketCost) })

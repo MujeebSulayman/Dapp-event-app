@@ -209,7 +209,7 @@ contract DappEventX is Ownable, ReentrancyGuard, ERC721 {
   function payout(uint256 eventId) public {
     require(eventExists[eventId], 'Event not found');
     require(!events[eventId].paidOut, 'Event already paid out');
-    require(currentTime() > events[eventId].endsAt, 'Event still ongoing'); // disable while testing
+    require(currentTime() > events[eventId].endsAt, 'Event still ongoing');
     require(events[eventId].owner == msg.sender || msg.sender == owner(), 'Unauthorized entity');
     require(mintTickets(eventId), 'Event failed to mint');
 
