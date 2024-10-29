@@ -53,7 +53,7 @@ const Header: React.FC = () => {
           <nav className="hidden md:flex space-x-10">
             <NavLink href="/events">All Events</NavLink>
             <NavLink href="/events/create">Create</NavLink>
-            <NavLink href="/events/personal">Personal</NavLink>
+            {/* <NavLink href="/events/personal">Personal</NavLink> */}
           </nav>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <ConnectBtn networks />
@@ -98,9 +98,9 @@ const Header: React.FC = () => {
                     <NavLink href="/events/create" mobile>
                       Create
                     </NavLink>
-                    <NavLink href="/events/personal" mobile>
+                    {/* <NavLink href="/events/personal" mobile>
                       Personal
-                    </NavLink>
+                    </NavLink> */}
                   </nav>
                 </div>
               </div>
