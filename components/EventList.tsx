@@ -3,6 +3,7 @@ import { EventStruct } from '@/utils/type.dt'
 import Link from 'next/link'
 import React from 'react'
 import { FaEthereum } from 'react-icons/fa'
+import { Skeleton } from "@/components/ui/skeleton"
 
 const EventList: React.FC<{ events: EventStruct[]; loading?: boolean }> = ({ events, loading }) => {
   return (
@@ -11,7 +12,17 @@ const EventList: React.FC<{ events: EventStruct[]; loading?: boolean }> = ({ eve
         <h4 className="text-3xl font-bold my-8 text-gray-100 text-center">
           Recent Events
         </h4>
-      
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {loading ? (
+            [...Array(6)].map((_, i) => (
+              <CardSkeleton key={i} />
+            ))
+          ) : (
+            events.map((event, i) => (
+              <Card key={i} event={event} />
+            ))
+          )}
+        </div>
       </main>
     </section>
   )
@@ -67,5 +78,18 @@ const Card: React.FC<{ event: EventStruct }> = ({ event }) => {
   )
 }
 
+const CardSkeleton = () => {
+  return (
+    <div className="bg-gray-900/50 rounded-xl overflow-hidden border border-gray-800">
+      <Skeleton className="aspect-video w-full" />
+      <div className="p-5">
+        <Skeleton className="h-7 w-3/4 mb-2" />
+        <Skeleton className="h-4 w-full mb-2" />
+        <Skeleton className="h-4 w-2/3 mb-4" />
+        <Skeleton className="h-8 w-32 rounded-full" />
+      </div>
+    </div>
+  )
+}
 
 export default EventList
