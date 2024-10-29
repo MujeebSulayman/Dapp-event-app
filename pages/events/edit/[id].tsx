@@ -1,5 +1,4 @@
 import { getEvent, updateEvent } from '@/services/blockchain'
-import { generateEventData } from '@/utils/fakeData'
 import { timestampToDatetimeLocal } from '@/utils/helper'
 import { EventParams, EventStruct } from '@/utils/type.dt'
 import { GetServerSidePropsContext, NextPage } from 'next'

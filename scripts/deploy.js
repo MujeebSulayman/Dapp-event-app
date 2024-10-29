@@ -12,7 +12,8 @@ async function main() {
 
     const DappEventX = await ethers.getContractFactory('DappEventX')
     console.log('Deploying DappEventX...')
-    const dappEventX = await DappEventX.deploy(5) // Assuming 5 is the servicePct
+
+    const dappEventX = await DappEventX.deploy(5)
 
     await dappEventX.waitForDeployment()
 

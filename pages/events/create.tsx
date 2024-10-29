@@ -69,14 +69,14 @@ const Page: NextPage = () => {
     'mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md shadow-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150 ease-in-out'
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-gray-300">
+    <div className="min-h-screen pt-28 bg-gradient-to-br from-gray-900 to-black text-gray-300">
       <Head>
         <title>HemiVent | Create Event</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-extrabold text-white mb-8">Create New Event</h1>
+        <h1 className="text-3xl font-extrabold text-center text-white mb-8">Create New Event</h1>
         <form
           onSubmit={handleSubmit}
           className="space-y-6 bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl"

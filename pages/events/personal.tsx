@@ -35,7 +35,7 @@ const Page: NextPage = () => {
       <div className="mt-10 h-20 "></div>
 
       {collection.length > 0 && events.length > collection.length && (
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex justify-center mt-28 items-center">
           <button
             className="bg-orange-500 shadow-md rounded-full py-3 px-4
         text-white duration-300 transition-all"

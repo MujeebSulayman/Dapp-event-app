@@ -48,7 +48,7 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
   }, [event])
 
   return event ? (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen pt-28 bg-black text-white">
       <Head>
         <title>HemiVent | {event.title}</title>
         <link rel="icon" href="/favicon.ico" />
@@ -106,7 +106,7 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
                   <FaEthereum className="text-xl mr-2" />
                   <h3 className="text-sm font-semibold">Price</h3>
                 </div>
-                <p className="text-white text-sm">{event.ticketCost.toFixed(2)} ETH</p>
+                <p className="text-white text-sm">{event.ticketCost.toFixed(4)} ETH</p>
               </div>
             </div>
 
@@ -115,7 +115,7 @@ const Page: NextPage<ComponentProps> = ({ eventData, ticketsData }) => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center text-2xl font-bold text-indigo-400">
                 <FaEthereum className="mr-2" />
-                <span>{event.ticketCost.toFixed(2)} ETH</span>
+                <span>{event.ticketCost.toFixed(4)} ETH</span>
               </div>
             </div>
 
